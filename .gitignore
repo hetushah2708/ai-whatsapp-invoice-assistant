@@ -1,6 +1,17 @@
 venv/
+<<<<<<< HEAD
 node_modules/
 .env
 uploads/
 __pycache__/
 dist/
+=======
+__pycache__/
+.env
+*.pyc
+uploads/
+.idea/
+.vscode/
+node_modules/
+.DS_Store
+>>>>>>> 5f30c33cc8abfc1b58e43875f7931b2fc91537b6
