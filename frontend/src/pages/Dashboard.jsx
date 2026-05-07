@@ -10,6 +10,10 @@ export default function Dashboard({
   setFile,
   handleUpload,
   response,
+  loading,
+  handleDelete,
+  searchTerm,
+  setSearchTerm,
 }) {
 
   return (
@@ -35,14 +39,19 @@ export default function Dashboard({
                 setFile={setFile}
                 handleUpload={handleUpload}
                 response={response}
+                loading={loading}
               />
 
             </div>
 
             <div className="lg:col-span-2">
 
-              <InvoiceTable invoices={invoices} />
-
+              <InvoiceTable
+  invoices={invoices}
+  searchTerm={searchTerm}
+  setSearchTerm={setSearchTerm}
+  handleDelete={handleDelete}
+/>
             </div>
 
           </div>

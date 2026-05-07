@@ -1,10 +1,54 @@
-export default function InvoiceTable({ invoices }) {
+export default function InvoiceTable({
+  invoices,
+  searchTerm,
+  setSearchTerm,
+  handleDelete,
+}) {
+
+  const filteredInvoices = invoices.filter((invoice) => {
+
+    let data = {};
+
+    try {
+
+      data =
+        typeof invoice.structured_data === "string"
+          ? JSON.parse(invoice.structured_data)
+          : invoice.structured_data;
+
+    } catch (error) {
+
+      data = {};
+
+    }
+
+    return (
+
+      invoice.filename
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+
+      ||
+
+      (data.invoice_number || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+
+      ||
+
+      (data.vendor_name || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+
+    );
+
+  });
 
   return (
 
     <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
 
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 gap-4">
 
         <h2 className="text-2xl font-semibold text-white">
 
@@ -12,11 +56,13 @@ export default function InvoiceTable({ invoices }) {
 
         </h2>
 
-        <span className="text-zinc-500 text-sm">
-
-          {invoices.length} invoices
-
-        </span>
+        <input
+          type="text"
+          placeholder="Search invoices..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-white outline-none focus:border-indigo-500 w-64"
+        />
 
       </div>
 
@@ -32,6 +78,9 @@ export default function InvoiceTable({ invoices }) {
               <th className="pb-4">Filename</th>
               <th className="pb-4">Status</th>
               <th className="pb-4">AI Output</th>
+              <th className="pb-4 text-right">Actions</th>
+
+              
 
             </tr>
 
@@ -39,115 +88,126 @@ export default function InvoiceTable({ invoices }) {
 
           <tbody>
 
-            {invoices.map((invoice) => (
+            {filteredInvoices.map((invoice) => {
 
-              <tr
-                key={invoice.id}
-                className="border-b border-zinc-800 hover:bg-zinc-800/30 transition"
-              >
+              let data = {};
 
-                <td className="py-6 text-white">
+              try {
 
-                  {invoice.id}
+                data =
+                  typeof invoice.structured_data === "string"
+                    ? JSON.parse(invoice.structured_data)
+                    : invoice.structured_data;
 
-                </td>
+              } catch {
 
-                <td className="py-6 text-white">
+                data = {};
 
-                  {invoice.filename}
+              }
 
-                </td>
+              return (
 
-                <td className="py-6">
+                <tr
+                  key={invoice.id}
+                  className="border-b border-zinc-800 hover:bg-zinc-800/30 transition"
+                >
 
-                  <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">
+                  <td className="py-6 text-white">
 
-                    {invoice.status}
+                    {invoice.id}
 
-                  </span>
+                  </td>
 
-                </td>
+                  <td className="py-6 text-white">
 
-                <td className="py-6">
+                    {invoice.filename}
 
-                  {(() => {
+                  </td>
 
-                    let data = {};
+                  <td className="py-6">
 
-                    try {
+                    <span className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm">
 
-                      data =
-                        typeof invoice.structured_data === "string"
-                          ? JSON.parse(invoice.structured_data)
-                          : invoice.structured_data;
+                      {invoice.status}
 
-                    } catch {
+                    </span>
 
-                      data = {};
-                    }
+                  </td>
 
-                    return (
+                  <td className="py-6">
 
-                      <div className="space-y-2 text-sm">
+                    <div className="space-y-2 text-sm">
 
-                        <div>
+                      <div>
 
-                          <span className="text-zinc-500">
+                        <span className="text-zinc-500">
 
-                            Vendor:
+                          Vendor:
 
-                          </span>
+                        </span>
 
-                          <span className="ml-2 text-white">
+                        <span className="ml-2 text-white">
 
-                            {data.vendor_name || "Not Found"}
+                          {data.vendor_name || "Not Found"}
 
-                          </span>
-
-                        </div>
-
-                        <div>
-
-                          <span className="text-zinc-500">
-
-                            Invoice:
-
-                          </span>
-
-                          <span className="ml-2 text-white">
-
-                            {data.invoice_number || "Not Found"}
-
-                          </span>
-
-                        </div>
-
-                        <div>
-
-                          <span className="text-zinc-500">
-
-                            Amount:
-
-                          </span>
-
-                          <span className="ml-2 text-green-400 font-semibold">
-
-                            ${data.total_amount || "0"}
-
-                          </span>
-
-                        </div>
+                        </span>
 
                       </div>
 
-                    );
-                  })()}
+                      <div>
 
-                </td>
+                        <span className="text-zinc-500">
 
-              </tr>
+                          Invoice:
 
-            ))}
+                        </span>
+
+                        <span className="ml-2 text-white">
+
+                          {data.invoice_number || "Not Found"}
+
+                        </span>
+
+                      </div>
+
+                      <div>
+
+                        <span className="text-zinc-500">
+
+                          Amount:
+
+                        </span>
+
+                        <span className="ml-2 text-green-400 font-semibold">
+
+                          ${data.total_amount || "0"}
+
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                  </td>
+
+                  <td className="py-6 text-right">
+
+  <button
+    onClick={() => handleDelete(invoice.id)}
+    className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl transition"
+  >
+
+    Delete
+
+  </button>
+
+</td>
+
+                </tr>
+
+              );
+
+            })}
 
           </tbody>
 

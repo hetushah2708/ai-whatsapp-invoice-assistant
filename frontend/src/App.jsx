@@ -7,10 +7,10 @@ import Dashboard from "./pages/Dashboard";
 function App() {
 
   const [invoices, setInvoices] = useState([]);
-
   const [file, setFile] = useState(null);
-
   const [response, setResponse] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
 
   useEffect(() => {
@@ -31,6 +31,7 @@ function App() {
       setInvoices(response.data);
 
     } catch (error) {
+      
 
       console.error(error);
 
@@ -47,6 +48,8 @@ function App() {
 
     formData.append("file", file);
 
+    setLoading(true);
+
     try {
 
       const response = await axios.post(
@@ -58,13 +61,36 @@ function App() {
 
       fetchInvoices();
 
+      setLoading(false);
+
     } catch (error) {
+       setLoading(false);
 
       console.error("Upload Error:", error);
 
     }
 
   };
+
+  const handleDelete = async (invoiceId) => {
+
+  try {
+
+    await axios.delete(
+
+      `http://127.0.0.1:8000/invoices/${invoiceId}`
+
+    );
+
+    fetchInvoices();
+
+  } catch (error) {
+
+    console.error("Delete Error:", error);
+
+  }
+
+};
 
 
   return (
@@ -75,6 +101,10 @@ function App() {
       setFile={setFile}
       handleUpload={handleUpload}
       response={response}
+      loading={loading}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      handleDelete={handleDelete}
     />
 
   );
