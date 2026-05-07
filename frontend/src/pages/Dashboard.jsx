@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import StatsCards from "../components/StatsCards";
 import UploadCard from "../components/UploadCard";
 import InvoiceTable from "../components/InvoiceTable";
+import AnalyticsChart from "../components/AnalyticsChart";
 
 export default function Dashboard({
   invoices,
@@ -18,7 +19,7 @@ export default function Dashboard({
 
   return (
 
-    <div className="flex bg-black min-h-screen">
+    <div className="flex bg-black min-h-screen text-white">
 
       <Sidebar />
 
@@ -26,13 +27,16 @@ export default function Dashboard({
 
         <Navbar />
 
-        <div className="p-8">
+        <div className="p-6 lg:p-8 space-y-8">
 
+          {/* KPI SECTION */}
           <StatsCards invoices={invoices} />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* TOP GRID */}
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
 
-            <div>
+            {/* LEFT SIDE */}
+            <div className="xl:col-span-2">
 
               <UploadCard
                 file={file}
@@ -44,15 +48,24 @@ export default function Dashboard({
 
             </div>
 
-            <div className="lg:col-span-2">
+            {/* RIGHT SIDE */}
+            <div className="xl:col-span-3">
 
-              <InvoiceTable
-  invoices={invoices}
-  searchTerm={searchTerm}
-  setSearchTerm={setSearchTerm}
-  handleDelete={handleDelete}
-/>
+              <AnalyticsChart invoices={invoices} />
+
             </div>
+
+          </div>
+
+          {/* TABLE SECTION */}
+          <div className="w-full">
+
+            <InvoiceTable
+              invoices={invoices}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              handleDelete={handleDelete}
+            />
 
           </div>
 

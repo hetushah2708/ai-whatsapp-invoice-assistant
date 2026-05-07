@@ -56,13 +56,28 @@ export default function InvoiceTable({
 
         </h2>
 
-        <input
-          type="text"
-          placeholder="Search invoices..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-white outline-none focus:border-indigo-500 w-64"
-        />
+        <div className="flex items-center gap-3">
+
+          <a
+            href="http://127.0.0.1:8000/export/csv"
+            target="_blank"
+            rel="noreferrer"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-xl transition"
+          >
+
+            Export CSV
+
+          </a>
+
+          <input
+            type="text"
+            placeholder="Search invoices..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-zinc-800 border border-zinc-700 rounded-xl px-4 py-2 text-white outline-none focus:border-indigo-500 w-64"
+          />
+
+        </div>
 
       </div>
 
@@ -79,8 +94,6 @@ export default function InvoiceTable({
               <th className="pb-4">Status</th>
               <th className="pb-4">AI Output</th>
               <th className="pb-4 text-right">Actions</th>
-
-              
 
             </tr>
 
@@ -192,16 +205,31 @@ export default function InvoiceTable({
 
                   <td className="py-6 text-right">
 
-  <button
-    onClick={() => handleDelete(invoice.id)}
-    className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl transition"
-  >
+                    <div className="flex items-center justify-end gap-2">
 
-    Delete
+                      <a
+                        href={`http://127.0.0.1:8000/export/csv/${invoice.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-400 px-4 py-2 rounded-xl transition"
+                      >
 
-  </button>
+                        Export
 
-</td>
+                      </a>
+
+                      <button
+                        onClick={() => handleDelete(invoice.id)}
+                        className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-4 py-2 rounded-xl transition"
+                      >
+
+                        Delete
+
+                      </button>
+
+                    </div>
+
+                  </td>
 
                 </tr>
 
